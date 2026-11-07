@@ -1,0 +1,15 @@
+{
+  "name": "rubik-coach",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.14.0" },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test --test-concurrency=1"
+  },
+  "dependencies": { "cubing": "0.63.3", "three": "0.170.0" },
+  "devDependencies": { "vite": "6.4.5" }
+}
