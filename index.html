@@ -1,4 +1,4 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rubik Coach 3D · MVP</title><style>
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rubik Coach 3D · MVP (diagnostic fix)</title><style>
 :root{font-family:system-ui,-apple-system,sans-serif;color:#e8eefb;background:#0c1220}*{box-sizing:border-box}body{margin:0}header{padding:18px 22px;border-bottom:1px solid #263249;display:flex;justify-content:space-between;align-items:center;gap:12px}h1{font-size:22px;margin:0}h2{font-size:17px;margin:0 0 12px}.muted,small{color:#9baccc}main{max-width:1180px;margin:auto;padding:18px;display:grid;grid-template-columns:minmax(310px,1fr) minmax(310px,1fr);gap:16px}.panel{background:#151e30;border:1px solid #2c3b55;border-radius:16px;padding:18px}.wide{grid-column:1/-1}button,select{font:inherit;border-radius:9px;border:1px solid #3b4c6a;background:#253451;color:#f3f7ff;padding:9px 12px;cursor:pointer}button:hover{background:#354b71}button:disabled{opacity:.45;cursor:not-allowed}.primary{background:#245bdf;border-color:#3670f7}.danger{background:#5b2831}#cube{height:340px;display:flex;justify-content:center;align-items:center}twisty-player{width:100%;height:100%}.moves{display:flex;gap:7px;flex-wrap:wrap}.moves button{min-width:43px;font-weight:700}.net{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;max-width:480px;margin:14px auto}.face{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;background:#090d17;padding:4px;border-radius:6px;aspect-ratio:1}.face label{grid-column:1/-1}.tile{border-radius:4px;aspect-ratio:1;min-width:0;border:2px solid #111827;padding:0}.tile.selected{outline:3px solid #e2e8f0;outline-offset:-3px}.face-name{text-align:center;font-size:12px;color:#b7c6e0;margin:2px 0}.facewrap{min-width:0}.spacer{visibility:hidden}.palette{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.swatch{width:40px;height:40px;border:3px solid transparent}.swatch.active{border-color:white}.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.status{white-space:pre-wrap;padding:12px;background:#10182a;border-radius:9px;margin-top:12px;line-height:1.55}.ok{color:#8de4b4}.bad{color:#ff9e9e}.log{max-height:230px;overflow:auto;font-family:ui-monospace,monospace;font-size:13px}.log div{padding:6px;border-bottom:1px solid #2c3b55}.tag{display:inline-block;padding:4px 8px;border-radius:6px;background:#263954;color:#d5e3ff;font-size:12px}.help{line-height:1.65;color:#c4d1e8}input[type=file]{max-width:230px}#modelStatus{font-size:12px;color:#b9c9e9}@media(max-width:780px){main{grid-template-columns:1fr;padding:10px}.wide{grid-column:auto}header{padding:14px}#cube{height:280px}.panel{padding:13px}}
 </style></head><body><header><div><h1>🧩 Rubik Coach 3D</h1><small>MVP · 54 ô màu · mô phỏng · kiểm tra · lưu buổi học</small></div><span class="tag" id="saved">Chưa lưu</span></header><main>
 <section class="panel"><h2>1. Rubik 3D</h2><div id="cube"><span class="muted">Đang tải cubing.js…</span></div><div id="modelStatus">Mô hình cubing.js</div><p class="muted">Kéo để xoay góc nhìn. Các nút dưới đây xoay tầng thật của mô hình, không chỉ xoay camera.</p><div class="moves" id="moves"></div><div class="toolbar" style="margin-top:12px"><button id="undo">↶ Hoàn tác</button><button id="redo">↷ Làm lại</button><button id="reset" class="danger">Đặt lại về đã giải</button></div></section>
@@ -7,7 +7,36 @@
 <section class="panel"><h2>4. Giải thích thao tác</h2><div id="lesson" class="status">Chọn một nước xoay để xem giải thích.</div><p class="help"><b>Quy ước:</b> U = trên, D = dưới, F = trước, B = sau, L = trái, R = phải. Dấu ' nghĩa là ngược chiều kim đồng hồ; số 2 là 180°. Luôn xác định chiều bằng cách nhìn thẳng vào mặt đang xoay.</p><p class="help"><b>Độ tin cậy:</b> 3D và sơ đồ 54 ô cùng dùng một trạng thái. Chỉ bấm xoay sau khi đã thực hiện đúng nước đó trên khối thật; nếu lỡ xoay ngoài ứng dụng, hãy nhập lại trạng thái.</p></section>
 <section class="panel wide"><h2>Hướng dẫn quét thủ công sáu mặt</h2><p class="help">MVP này nhập 54 ô thủ công (chưa tự nhận diện camera). Giữ tâm trắng hướng lên (U), tâm xanh lá hướng trước (F) nếu khối của bạn dùng cặp tâm đó. Khi nhập mỗi mặt, phải giữ hướng chụp nhất quán: mặt U nhìn từ trên với cạnh trên hướng về B; mặt F nhìn từ trước với cạnh trên hướng U; mặt R nhìn từ phải với cạnh trên hướng U; mặt B nhìn từ sau với cạnh trên hướng U; mặt L nhìn từ trái với cạnh trên hướng U; mặt D nhìn từ dưới với cạnh trên hướng F. Sau khi nhập, bấm Kiểm tra 54 ô, rồi Áp dụng vào 3D. Đừng đoán màu ô khuất.</p></section>
 </main><script type="module">
-import {TwistyPlayer} from 'https://cdn.jsdelivr.net/npm/cubing@0.63.3/+esm';
+// Dynamic imports allow the interface and diagnostics to load even if a CDN fails.
+const CUBING_SOURCES = [
+  'https://cdn.jsdelivr.net/npm/cubing@0.63.3/+esm',
+  'https://esm.sh/cubing@0.63.3'
+];
+async function withTimeout(promise, ms, label) {
+  let timer;
+  try { return await Promise.race([promise, new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(label + ' quá thời gian ' + ms/1000 + ' giây')), ms);
+  })]); } finally { clearTimeout(timer); }
+}
+async function loadTwistyPlayer() {
+  const errors = [];
+  for (const url of CUBING_SOURCES) {
+    try {
+      const mod = await withTimeout(import(/* @vite-ignore */ url), 8000, url);
+      if (typeof mod.TwistyPlayer !== 'function') throw new Error('Không tìm thấy TwistyPlayer');
+      return mod.TwistyPlayer;
+    } catch (err) { errors.push(url + ': ' + (err?.message || String(err))); }
+  }
+  throw new Error(errors.join(' | '));
+}
+window.addEventListener('error', e => {
+  const el = document.getElementById('modelStatus');
+  if (el) el.textContent = 'Lỗi JavaScript: ' + (e.message || 'không rõ');
+});
+window.addEventListener('unhandledrejection', e => {
+  const el = document.getElementById('modelStatus');
+  if (el) el.textContent = 'Lỗi tải thư viện: ' + (e.reason?.message || String(e.reason));
+});
 const ORDER='URFDLB', COLOR={U:'#f8fafc',R:'#dc2626',F:'#16a34a',D:'#facc15',L:'#f97316',B:'#2563eb'},LABEL={U:'Trắng',R:'Đỏ',F:'Xanh lá',D:'Vàng',L:'Cam',B:'Xanh dương'};
 const solved=()=>ORDER.split('').map(x=>x.repeat(9)).join('');let state=solved(),draft=state.split(''),history=[],future=[],selected='U',base=solved(),ready=false,player=null;
 const $=id=>document.getElementById(id);const COLORS=ORDER.split('');
@@ -29,7 +58,7 @@ function rotateVec(v,axis,sgn){let [x,y,z]=v;if(axis==='x')return [x,-sgn*z,sgn*
 const rotations={U:['y',1,-1],D:['y',-1,1],R:['x',1,-1],L:['x',-1,1],F:['z',1,-1],B:['z',-1,1]};
 function move(s,m){let face=m[0],times=m.includes('2')?2:m.includes("'")?3:1,cur=s;for(let t=0;t<times;t++){let [axis,layer,sgn]=rotations[face],idx={x:0,y:1,z:2}[axis],out=cur.split('');for(const o of stickers){if(o.p[idx]===layer){let target=indexMap.get(key(rotateVec(o.p,axis,sgn),rotateVec(o.n,axis,sgn)));out[target]=cur[o.index]}}cur=out.join('')}return cur}
 // Cube solver: maps validated arbitrary facelets to a setup algorithm for cubing.js.
-let Cube=null,solverReady=false;async function ensureSolver(){if(solverReady)return;const mod=await import('https://cdn.jsdelivr.net/npm/cubejs@1.3.2/+esm');Cube=mod.default||mod;Cube.initSolver();solverReady=true}
+let Cube=null,solverReady=false;async function ensureSolver(){if(solverReady)return;const mod=await withTimeout(import('https://cdn.jsdelivr.net/npm/cubejs@1.3.2/+esm'),12000,'cubejs');Cube=mod.default||mod;if(typeof Cube.initSolver!=='function'||typeof Cube.fromString!=='function')throw Error('cubejs không có API mong đợi');Cube.initSolver();solverReady=true}
 function inverse(alg){return alg.trim().split(/\s+/).filter(Boolean).reverse().map(m=>m.endsWith('2')?m:m.endsWith("'")?m.slice(0,-1):m+"'").join(' ')}
 let setupAlg='',setupPending=false;
 async function sync3d(){if(!player)return;const err=validate(state);if(err){$('modelStatus').textContent='Trạng thái chưa hợp lệ: '+err;return}if(state===solved()){player.experimentalSetupAlg='';player.alg='';$('modelStatus').textContent='Đã đồng bộ: trạng thái đã giải';return}try{$('modelStatus').textContent='Đang tính trạng thái 3D…';await ensureSolver();let solution=Cube.fromString(state).solve();setupAlg=inverse(solution);player.experimentalSetupAlg=setupAlg;player.alg='';$('modelStatus').textContent='3D đã đồng bộ với 54 ô màu';}catch(e){$('modelStatus').textContent='Không thể đồng bộ 3D: '+e.message}}
@@ -50,5 +79,16 @@ $('reset').onclick=()=>{if(!confirm('Đặt lại khối đã giải và xóa l�
 $('export').onclick=()=>{const obj={schemaVersion:1,puzzle:'3x3x3',faceletOrder:'URFDLB',state,base,moves:history,validated:!validate(state),orientation:{up:'U',front:'F'},exportedAt:new Date().toISOString()};let blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='rubik-coach-state.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
 $('import').onchange=async e=>{let file=e.target.files[0];if(!file)return;try{let obj=JSON.parse(await file.text()),s=obj.state;if(validate(s))throw Error(validate(s));if(!confirm('Nhập trạng thái JSON này và thay thế buổi học hiện tại?'))return;state=base=s;draft=s.split('');history=[];future=[];update()}catch(err){alert('Không nhập được: '+err.message)}e.target.value=''};
 try{let saved=JSON.parse(localStorage.getItem('rubik-coach-mvp-v1')||'null');if(saved&&!validate(saved.state)){state=saved.state;base=typeof saved.base==='string'&&!validate(saved.base)?saved.base:state;history=Array.isArray(saved.history)?saved.history.filter(m=>/^[URFDLB](2|')?$/.test(m)):[];future=Array.isArray(saved.future)?saved.future.filter(m=>/^[URFDLB](2|')?$/.test(m)):[];draft=typeof saved.draft==='string'&&saved.draft.length===54?saved.draft.split(''):state.split('')}}catch{}
-renderPalette();renderNet();renderHistory();save();try{player=new TwistyPlayer({puzzle:'3x3x3',background:'none',controlPanel:'none',hintFacelets:'none',visualization:'3D'});$('cube').replaceChildren(player);await sync3d()}catch(e){$('cube').textContent='Không tải được cubing.js. Kiểm tra kết nối Internet: '+e.message}
+renderPalette();renderNet();renderHistory();save();try{
+  $('modelStatus').textContent='Đang kết nối thư viện 3D (tối đa khoảng 16 giây)…';
+  const TwistyPlayer=await loadTwistyPlayer();
+  player=new TwistyPlayer({puzzle:'3x3x3',background:'none',controlPanel:'none',hintFacelets:'none',visualization:'3D'});
+  $('cube').replaceChildren(player);
+  await sync3d();
+  if(state===solved()) $('modelStatus').textContent='Mô hình 3D đã khởi tạo. Kéo để xoay góc nhìn.';
+}catch(e){
+  $('cube').innerHTML='<div class="status bad">Không tải được mô hình 3D. Sơ đồ 54 ô vẫn sử dụng được. Xem nguyên nhân bên dưới.</div>';
+  $('modelStatus').textContent='Chi tiết lỗi: '+(e?.message||String(e));
+  console.error('Rubik Coach 3D init failed:',e);
+}
 </script></body></html>
