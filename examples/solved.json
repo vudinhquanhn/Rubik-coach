@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 2,
+  "puzzle": "3x3x3",
+  "faceletOrder": "URFDLB",
+  "state": "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB",
+  "base": "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB",
+  "moves": [],
+  "future": [],
+  "draft": "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB",
+  "colorMap": {"U":"#f8fafc","R":"#dc2626","F":"#16a34a","D":"#facc15","L":"#f97316","B":"#2563eb"},
+  "orientation": {
+    "up":"U", "front":"F", "facelets":"outside-view-row-major",
+    "top":{"U":"B","R":"U","F":"U","D":"F","L":"U","B":"U"},
+    "right":{"U":"R","R":"B","F":"R","D":"R","L":"F","B":"L"}
+  },
+  "validated": true
+}
